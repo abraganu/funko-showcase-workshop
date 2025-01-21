@@ -6,12 +6,12 @@ export type Funko = {
   character: string;
   numberInLine: number;
   imageUrl: string;
-  yearReleased: number | string;
+  yearReleased: string;
 };
 export interface FunkoProps {
   funkos: Funko[];
   setFunkos: setFunkos;
 }
 export interface EditFunkoProps {
-  funko: Funko
+  funko: Funko;
 }
