@@ -15,6 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const funkoSchema = z.object({
+  _id: z.string(),
   character: z.string().min(1, "Character name must be at least 1 character"),
   imageUrl: z.string().url("Invalid URL"),
   numberInLine: z.number().int().min(1, "Number in line must be at least 1"),
@@ -56,9 +57,9 @@ const EditFunkoButton = ({
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (data: FunkoForm) => {
     try {
-      const response = await axios.post("/api/update_funkos", formValues);
+      const response = await axios.post("/api/update_funkos", data);
       setFunkos((funkos: Funko[]) => {
         return funkos.map((funko) => {
           if (funko._id === response.data._id) {
@@ -101,6 +102,21 @@ const EditFunkoButton = ({
             padding: "20px",
           }}
         >
+          <Controller
+            name="_id"
+            control={control}
+            defaultValue={funko._id as unknown as string}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="ID"
+                error={!!errors._id}
+                helperText={errors._id?.message}
+                disabled
+                hidden
+              />
+            )}
+          ></Controller>
           <Controller
             name="character"
             control={control}
@@ -156,7 +172,7 @@ const EditFunkoButton = ({
           <Controller
             name="numberInLine"
             control={control}
-            defaultValue={funko.numberInLine}
+            defaultValue={Number(funko.numberInLine)}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -164,6 +180,7 @@ const EditFunkoButton = ({
                 error={!!errors.numberInLine}
                 helperText={errors.numberInLine?.message}
                 type="number"
+                onChange={(e) => field.onChange(Number(e.target.value))}
               />
             )}
           />
