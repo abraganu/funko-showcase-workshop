@@ -14,7 +14,7 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const funkoSchema = z.object({
+const funkoEditSchema = z.object({
   _id: z.string(),
   character: z.string().min(1, "Character name must be at least 1 character"),
   imageUrl: z.string().url("Invalid URL"),
@@ -23,7 +23,7 @@ const funkoSchema = z.object({
   source: z.string().min(1, "Source must be at least 1 character"),
 });
 
-type FunkoForm = z.infer<typeof funkoSchema>;
+type FunkoForm = z.infer<typeof funkoEditSchema>;
 const EditFunkoButton = ({
   setFunkos,
   funko,
@@ -32,30 +32,16 @@ const EditFunkoButton = ({
   funko: Funko;
 }) => {
   const [open, setOpen] = useState(false);
-  const [formValues, setFormValues] = useState({
-    _id: funko._id,
-    imageUrl: funko.imageUrl,
-    source: funko.source,
-    character: funko.character,
-    yearReleased: funko.yearReleased,
-    numberInLine: funko.numberInLine,
-  });
-
   const {
     control,
     handleSubmit: formSubmit,
     formState: { errors },
   } = useForm<FunkoForm>({
-    resolver: zodResolver(funkoSchema),
+    resolver: zodResolver(funkoEditSchema),
   });
 
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  const handleInputChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
 
   const handleSubmit = async (data: FunkoForm) => {
     try {

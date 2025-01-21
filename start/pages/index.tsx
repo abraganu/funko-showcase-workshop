@@ -26,9 +26,15 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
     const db = client.db(process.env.DATABASE_NAME);
     const collectionName = process.env.COLLECTION_NAME;
     if (!collectionName) {
-      throw new Error("COLLECTION_NAME is not defined in the environment variables");
+      throw new Error(
+        "COLLECTION_NAME is not defined in the environment variables"
+      );
     }
-    const funkos = await db.collection(collectionName).find({}).limit(30).toArray();
+    const funkos = await db
+      .collection(collectionName)
+      .find({})
+      .limit(30)
+      .toArray();
 
     return {
       props: {
@@ -75,13 +81,13 @@ export default function Home({
         <SearchBar setSearch={setSearch} />
 
         {/* Insert code for Add Button component here */}
-
+        <AddFunkoButton setFunkos={setFunkos} />
         <main>
           <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={4}>
             <FunkoCard funkos={funkos} setFunkos={setFunkos} />
-          </Box >
-        </main >
-      </Container >
+          </Box>
+        </main>
+      </Container>
       <footer>
         <a
           href="https://www.digitalocean.com/"
